@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import {
@@ -13,52 +13,49 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 
-interface Promotion {
+interface Product {
   _id: string;
-  title: string;
-  image: string;
+  name: string;
+  price: number;
+  quantity: number;
+  images: string[];
 }
 
-export default function HomePage() {
-  const [promotions, setPromotions] = useState<Promotion[]>([]);
+export default function ShopPage() {
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPromotions = async () => {
+    const fetchProducts = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotions`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
         const data = await res.json();
-        setPromotions(data);
+        setProducts(data);
       } catch (error) {
-        console.error("Error al cargar promociones:", error);
+        console.error("Error al obtener productos:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPromotions();
+    fetchProducts();
   }, []);
 
   if (loading) return <Spinner size="xl" mt={10} />;
 
   return (
     <Box p={8}>
-      <Heading mb={6}>Bienvenido a Adoremos</Heading>
-      <Text mb={10}>
-        Una tienda con propósito. Descubre nuestras promociones especiales y mensajes inspiradores.
-      </Text>
-
-      <Heading size="md" mb={4}>Promociones</Heading>
+      <Heading mb={6}>Tienda</Heading>
       <Grid templateColumns="repeat(auto-fill, minmax(260px, 1fr))" gap={6}>
-        {promotions.map((promo) => {
-          const whatsappMessage = `Hola, estoy interesado(a) en la promoción: *${promo.title}*. ¿Podrían darme más información?`;
-          const whatsappUrl = `https://wa.me/573001234567?text=${encodeURIComponent(
+        {products.map((product) => {
+          const whatsappMessage = `Hola, estoy interesado(a) en comprar el producto: *${product.name}*. ¿Podrían darme más información?`;
+          const whatsappUrl = `https://wa.me/573126127202?text=${encodeURIComponent(
             whatsappMessage
-          )}`; // Reemplaza por tu número real
+          )}`; // Reemplaza con tu número de WhatsApp
 
           return (
             <Box
-              key={promo._id}
+              key={product._id}
               borderWidth="1px"
               borderRadius="lg"
               overflow="hidden"
@@ -69,19 +66,23 @@ export default function HomePage() {
               boxShadow="md"
             >
               <Image
-                src={promo.image}
-                alt={promo.title}
+                src={product.images?.[0] || "/placeholder.png"} // usa imagen por defecto si no hay
+                alt={product.name}
                 mb={4}
                 borderRadius="md"
                 boxSize="200px"
                 objectFit="cover"
               />
               <Heading size="sm" mb={2} textAlign="center">
-                {promo.title}
+                {product.name}
               </Heading>
+              <Text mb={1}>Precio: ${product.price}</Text>
+              <Text mb={3} fontSize="sm">
+                Disponible: {product.quantity}
+              </Text>
 
               <VStack spacing={2} w="100%">
-                <Link href={`/promotions/${promo._id}`} passHref>
+                <Link href={`/shop/${product._id}`} passHref>
                   <Button colorScheme="blue" width="100%">
                     Ver más
                   </Button>
