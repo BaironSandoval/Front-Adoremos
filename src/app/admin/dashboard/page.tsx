@@ -13,6 +13,7 @@ import {
   VStack,
   Icon,
 } from '@chakra-ui/react';
+import type { IconType } from "react-icons";
 import { FaBox, FaBullhorn, FaBlog } from 'react-icons/fa';
 
 export default function Dashboard() {
@@ -68,7 +69,7 @@ function StatCard({
   value,
   color,
 }: {
-  icon: any;
+  icon: IconType;
   label: string;
   value: string;
   color: string;

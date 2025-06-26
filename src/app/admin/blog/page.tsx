@@ -32,17 +32,6 @@ export default function AdminBlogPage() {
   const [loading, setLoading] = useState(true);
   const toast = useToast();
 
-  const loadPosts = async () => {
-    try {
-      const data = await fetchBlogPosts();
-      setPosts(data);
-    } catch {
-      toast({ title: "Error al cargar publicaciones", status: "error" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleDelete = async (id: string) => {
     try {
       await deletePost(id);
@@ -54,8 +43,23 @@ export default function AdminBlogPage() {
   };
 
   useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        const data = await fetchBlogPosts();
+        setPosts(data);
+      } catch {
+        toast({
+          title: "Error al cargar publicaciones",
+          status: "error",
+          duration: 3000,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadPosts();
-  }, []);
+  }, [toast]);
 
   if (loading) return <Spinner size="xl" />;
 
@@ -90,7 +94,12 @@ export default function AdminBlogPage() {
                 <Tr key={post._id}>
                   <Td>
                     {post.image ? (
-                      <Image src={post.image} alt={post.title} boxSize="60px" objectFit="cover" />
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        boxSize="60px"
+                        objectFit="cover"
+                      />
                     ) : (
                       <span>Sin imagen</span>
                     )}

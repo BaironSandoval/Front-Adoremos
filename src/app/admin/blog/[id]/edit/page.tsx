@@ -25,7 +25,7 @@ export default function EditBlogPostPage() {
       }
     };
     load();
-  }, [id]);
+  }, [id, toast]);
 
   const handleSubmit = async (data: { title: string; content: string; author: string; image: string }) => {
     try {

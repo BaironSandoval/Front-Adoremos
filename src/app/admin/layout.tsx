@@ -1,7 +1,7 @@
 // admin/layout.tsx
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import { Box, VStack, Button, Text, Icon } from "@chakra-ui/react";
 import {
   FaTachometerAlt,
