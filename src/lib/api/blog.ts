@@ -15,7 +15,7 @@ export const fetchPublicPosts = async () => {
 
 
 export const fetchPostById = async (id: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/${id}`);
+  const res = await fetch(`${BASE_URL}/blog/${id}`);
   if (!res.ok) throw new Error("Error al obtener la entrada");
   return res.json();
 };

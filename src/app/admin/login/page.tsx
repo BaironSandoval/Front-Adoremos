@@ -12,6 +12,7 @@ import {
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { api } from "@/lib/axios";
 import { isAxiosErrorWithMessage } from "@/lib/utils/isAxiosErrorWithMessage";
 
 export default function AdminLoginPage() {
@@ -32,20 +33,11 @@ export default function AdminLoginPage() {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Credenciales incorrectas");
+      const res = await api.post("/auth/login", { email, password });
+      if (!res.data || !res.data.token) {
+        throw new Error("Token no recibido");
       }
-
-      const data = await res.json();
-      const token = data.token;
+      const { token } = res.data;
 
       login(token); // guarda el token en el contexto
       localStorage.setItem("adminToken", token); // opcional, si no lo hace el contexto

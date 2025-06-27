@@ -4,6 +4,7 @@ import { Box, Heading, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import ProductForm from "@/components/ProductForm";
 import { isAxiosErrorWithMessage } from "@/lib/utils/isAxiosErrorWithMessage";
+import { api } from "@/lib/axios";
 
 export default function NewProductPage() {
   const toast = useToast();
@@ -19,16 +20,11 @@ export default function NewProductPage() {
     const token = localStorage.getItem("adminToken");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
-        method: "POST",
+      await api.post("/products", data, {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
       });
-
-      if (!res.ok) throw new Error("Error al crear producto");
 
       toast({ title: "Producto creado exitosamente", status: "success" });
       router.push("/admin/products");

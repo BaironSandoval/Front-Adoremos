@@ -12,6 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import Link from "next/link";
+import { api } from "@/lib/axios";
 
 interface Product {
   _id: string;
@@ -28,8 +29,7 @@ export default function ShopPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
-        const data = await res.json();
+        const { data } = await api.get<Product[]>("/products");
         setProducts(data);
       } catch (error) {
         console.error("Error al obtener productos:", error);

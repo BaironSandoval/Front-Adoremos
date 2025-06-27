@@ -12,6 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import Link from "next/link";
+import { api } from "@/lib/axios";
 
 interface Promotion {
   _id: string;
@@ -26,9 +27,8 @@ export default function HomePage() {
   useEffect(() => {
     const fetchPromotions = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotions`);
-        const data = await res.json();
-        setPromotions(data);
+        const res = await api.get("/promotions");
+        setPromotions(res.data);
       } catch (error) {
         console.error("Error al cargar promociones:", error);
       } finally {

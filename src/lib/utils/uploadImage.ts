@@ -1,9 +1,11 @@
 // lib/utils/uploadImageToServer.ts
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://sitio-adoremos.onrender.com/api";
+
 export async function uploadImageToServer(file: File): Promise<string> {
   const formData = new FormData();
   formData.append("image", file);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload`, {
+  const res = await fetch(`${BASE_URL}/upload`, {
     method: "POST",
     body: formData,
   });
