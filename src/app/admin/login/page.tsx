@@ -12,6 +12,7 @@ import {
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { isAxiosErrorWithMessage } from "@/lib/utils/isAxiosErrorWithMessage";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -56,10 +57,13 @@ export default function AdminLoginPage() {
       });
 
       router.push("/admin");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = isAxiosErrorWithMessage(err)
+        ? err.response.data.message
+        : "Error desconocido";
       toast({
         title: "Error al iniciar sesión",
-        description: err.message,
+        description: errorMessage,
         status: "error",
         duration: 3000,
       });

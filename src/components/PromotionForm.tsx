@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { uploadImageToServer } from "@/lib/utils/uploadImage";
+import { isAxiosErrorWithMessage } from "@/lib/utils/isAxiosErrorWithMessage";
 
 interface PromotionFormProps {
   initialTitle?: string;
@@ -41,10 +42,13 @@ export default function PromotionForm({
         setImage(imageUrl);
         setPreview(imageUrl);
         toast({ title: "Imagen subida con éxito", status: "success" });
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const message = isAxiosErrorWithMessage(err)
+          ? err.response.data.message
+          : "Error desconocido";
         toast({
           title: "Error al subir imagen",
-          description: err.message,
+          description: message,
           status: "error",
         });
       } finally {
@@ -72,6 +76,7 @@ export default function PromotionForm({
       <FormControl mb={4} isRequired>
         <FormLabel>Imagen</FormLabel>
         <Input type="file" accept="image/*" onChange={handleImageChange} />
+        {uploading && <p style={{ color: "gray" }}>Subiendo imagen...</p>}
         {preview && (
           <Image
             src={preview}

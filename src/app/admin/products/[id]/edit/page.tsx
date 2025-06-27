@@ -4,6 +4,7 @@ import { Box, Heading, Spinner, useToast } from "@chakra-ui/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProductForm from "@/components/ProductForm";
+import { isAxiosErrorWithMessage } from "@/lib/utils/isAxiosErrorWithMessage";
 import { api } from "@/lib/axios";
 
 export default function EditProductPage() {
@@ -33,7 +34,7 @@ export default function EditProductPage() {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, toast]);
 
   const handleUpdate = async (data: {
     name: string;
@@ -53,10 +54,14 @@ export default function EditProductPage() {
 
       toast({ title: "Producto actualizado", status: "success" });
       router.push("/admin/products");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = isAxiosErrorWithMessage(err)
+        ? err.response.data.message
+        : "Error inesperado";
+
       toast({
-        title: "Error al actualizar",
-        description: err.response?.data?.message || "Error inesperado",
+        title: "Error",
+        description: message,
         status: "error",
       });
     }
@@ -69,7 +74,11 @@ export default function EditProductPage() {
       <Heading size="lg" mb={6}>
         Editar Producto
       </Heading>
-      <ProductForm onSubmit={handleUpdate} initialData={initialData} submitText="Actualizar" />
+      <ProductForm
+        onSubmit={handleUpdate}
+        initialData={initialData}
+        submitText="Actualizar"
+      />
     </Box>
   );
 }

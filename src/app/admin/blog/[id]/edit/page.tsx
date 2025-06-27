@@ -6,10 +6,18 @@ import { useParams, useRouter } from "next/navigation";
 import BlogPostForm from "@/components/BlogPostForm";
 import { getPostById, updatePost } from "@/lib/api/blog";
 
+type BlogPost = {
+  _id: string;
+  title: string;
+  content: string;
+  image: string;
+  author?: string;
+};
+
 export default function EditBlogPostPage() {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
-  const [initialData, setInitialData] = useState<any>(null);
+  const [initialData, setInitialData] = useState<BlogPost | null>(null);
   const toast = useToast();
   const router = useRouter();
 
@@ -42,7 +50,20 @@ export default function EditBlogPostPage() {
   return (
     <Box p={8}>
       <Heading size="lg" mb={6}>Editar Entrada de Blog</Heading>
-      <BlogPostForm onSubmit={handleSubmit} isEditing initialValues={initialData} />
+      <BlogPostForm
+        onSubmit={handleSubmit}
+        isEditing
+        initialValues={
+          initialData
+            ? {
+                title: initialData.title,
+                content: initialData.content,
+                image: initialData.image,
+                author: initialData.author,
+              }
+            : undefined
+        }
+      />
     </Box>
   );
 }

@@ -3,6 +3,7 @@
 import { Box, Heading, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import ProductForm from "@/components/ProductForm";
+import { isAxiosErrorWithMessage } from "@/lib/utils/isAxiosErrorWithMessage";
 
 export default function NewProductPage() {
   const toast = useToast();
@@ -31,8 +32,11 @@ export default function NewProductPage() {
 
       toast({ title: "Producto creado exitosamente", status: "success" });
       router.push("/admin/products");
-    } catch (err: any) {
-      toast({ title: "Error", description: err.message, status: "error" });
+    } catch (err: unknown) {
+      const message = isAxiosErrorWithMessage(err)
+        ? err.response.data.message
+        : "Error desconocido";
+      toast({ title: "Error", description: message, status: "error" });
     }
   };
 

@@ -14,20 +14,29 @@ import {
   useToast,
   Flex,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { fetchProducts, deleteProduct } from "@/lib/api/products";
 import Link from "next/link";
+import Image from "next/image";
+
+type Product = {
+  _id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  images?: string[];
+};
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const toast = useToast();
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     try {
       const data = await fetchProducts();
       setProducts(data);
-    } catch (err) {
+    } catch {
       toast({
         title: "Error al cargar productos",
         status: "error",
@@ -36,7 +45,7 @@ export default function AdminProductsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   const handleDelete = async (id: string) => {
     try {
@@ -58,7 +67,7 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [loadProducts]);
 
   if (loading) return <Spinner size="xl" />;
 
@@ -93,12 +102,13 @@ export default function AdminProductsPage() {
                 <Td>${product.price}</Td>
                 <Td>{product.quantity}</Td>
                 <Td>
-                  {product.images?.length > 0 ? (
-                    <img
-                      src={product.images[0]}
+                  {(product.images?.length ?? 0) > 0 ? (
+                    <Image
+                      src={product.images![0]}
                       alt={product.name}
-                      width="80"
-                      style={{ borderRadius: "8px" }}
+                      width={80}
+                      height={80}
+                      style={{ borderRadius: "8px", objectFit: "cover" }}
                     />
                   ) : (
                     <span>Sin imagen</span>

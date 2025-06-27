@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Box,
   Button,
   FormControl,
   FormLabel,
@@ -17,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { uploadImageToServer } from "@/lib/utils/uploadImage";
+import { isAxiosErrorWithMessage } from "@/lib/utils/isAxiosErrorWithMessage";
 
 type ProductFormProps = {
   initialData?: {
@@ -56,10 +56,13 @@ export default function ProductForm({
       const uploadedUrls = await Promise.all(uploadPromises);
       setImages((prev) => [...prev, ...uploadedUrls]);
       toast({ title: "Imágenes subidas con éxito", status: "success" });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = isAxiosErrorWithMessage(err)
+        ? err.response.data.message
+        : "Error inesperado";
       toast({
         title: "Error al subir imágenes",
-        description: err.message,
+        description: message,
         status: "error",
       });
     } finally {

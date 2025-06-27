@@ -2,7 +2,6 @@
 "use client";
 
 import {
-  Box,
   Button,
   FormControl,
   FormLabel,
@@ -12,7 +11,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import NextImage from "next/image";
 import { uploadImageToServer } from "@/lib/utils/uploadImage";
+import { isAxiosErrorWithMessage } from "@/lib/utils/isAxiosErrorWithMessage";
 
 type BlogPostFormProps = {
   initialValues?: {
@@ -21,11 +22,20 @@ type BlogPostFormProps = {
     author?: string;
     image?: string;
   };
-  onSubmit: (data: { title: string; content: string; author: string; image: string }) => void;
+  onSubmit: (data: {
+    title: string;
+    content: string;
+    author: string;
+    image: string;
+  }) => void;
   isEditing?: boolean;
 };
 
-export default function BlogPostForm({ initialValues = {}, onSubmit, isEditing = false }: BlogPostFormProps) {
+export default function BlogPostForm({
+  initialValues = {},
+  onSubmit,
+  isEditing = false,
+}: BlogPostFormProps) {
   const [title, setTitle] = useState(initialValues.title || "");
   const [content, setContent] = useState(initialValues.content || "");
   const [author, setAuthor] = useState(initialValues.author || "");
@@ -41,8 +51,11 @@ export default function BlogPostForm({ initialValues = {}, onSubmit, isEditing =
       setImage(url);
       setImagePreview(url);
       toast({ title: "Imagen subida", status: "success" });
-    } catch {
-      toast({ title: "Error al subir imagen", status: "error" });
+    } catch (err: unknown) {
+      const message = isAxiosErrorWithMessage(err)
+        ? err.response.data.message
+        : "Error al subir imagen";
+      toast({ title: message, status: "error" });
     } finally {
       setUploading(false);
     }
@@ -57,27 +70,51 @@ export default function BlogPostForm({ initialValues = {}, onSubmit, isEditing =
     <form onSubmit={handleSubmit}>
       <FormControl mb={4}>
         <FormLabel>Título</FormLabel>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
       </FormControl>
 
       <FormControl mb={4}>
         <FormLabel>Contenido</FormLabel>
-        <Textarea value={content} onChange={(e) => setContent(e.target.value)} required />
+        <Textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+        />
       </FormControl>
 
       <FormControl mb={4}>
         <FormLabel>Autor</FormLabel>
-        <Input value={author} onChange={(e) => setAuthor(e.target.value)} required />
+        <Input
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          required
+        />
       </FormControl>
 
       <FormControl mb={4}>
         <FormLabel>Imagen</FormLabel>
-        <Input type="file" accept="image/*" onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) handleImage(file);
-        }} />
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleImage(file);
+          }}
+        />
         {uploading && <Spinner size="sm" />}
-        {imagePreview && <img src={imagePreview} alt="preview" width="150" />}
+        {imagePreview && (
+          <NextImage
+            src={imagePreview}
+            alt="preview"
+            width={150}
+            height={100}
+            style={{ borderRadius: "8px", objectFit: "cover" }}
+          />
+        )}
       </FormControl>
 
       <Button type="submit" colorScheme={isEditing ? "blue" : "teal"}>

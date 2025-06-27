@@ -6,12 +6,17 @@ import { useEffect, useState } from "react";
 import PromotionForm from "@/components/PromotionForm";
 import { getPromotionById, updatePromotion } from "@/lib/api/promotions";
 
+type Promotion = {
+  title: string;
+  image: string;
+};
+
 export default function EditPromotionPage() {
   const { id } = useParams<{ id: string }>();
   const toast = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [promotion, setPromotion] = useState<any>(null);
+  const [promotion, setPromotion] = useState<Promotion | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -25,7 +30,7 @@ export default function EditPromotionPage() {
       }
     };
     load();
-  }, [id]);
+  }, [id, toast]);
 
   const handleUpdate = async ({ title, image }: { title: string; image: string }) => {
     try {
@@ -42,12 +47,14 @@ export default function EditPromotionPage() {
   return (
     <Box p={8}>
       <Heading size="lg" mb={6}>Editar Promoción</Heading>
-      <PromotionForm
-        initialTitle={promotion.title}
-        initialImage={promotion.image}
-        onSubmit={handleUpdate}
-        submitLabel="Actualizar promoción"
-      />
+      {promotion && (
+        <PromotionForm
+          initialTitle={promotion.title}
+          initialImage={promotion.image}
+          onSubmit={handleUpdate}
+          submitLabel="Actualizar promoción"
+        />
+      )}
     </Box>
   );
 }

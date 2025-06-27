@@ -11,22 +11,32 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getPromotions, deletePromotion } from "@/lib/api/promotions";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
+type Promotion = {
+  _id: string;
+  title: string;
+  image: string;
+};
+
 export default function PromotionsPage() {
-  const [promotions, setPromotions] = useState<any[]>([]);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
   const toast = useToast();
 
-  const loadPromotions = async () => {
+  const loadPromotions = useCallback(async () => {
     try {
       const data = await getPromotions();
       setPromotions(data);
     } catch {
       toast({ title: "Error al cargar promociones", status: "error" });
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadPromotions();
+  }, [loadPromotions]);
 
   const handleDelete = async (id: string) => {
     try {
@@ -40,7 +50,7 @@ export default function PromotionsPage() {
 
   useEffect(() => {
     loadPromotions();
-  }, []);
+  }, [loadPromotions]);
 
   return (
     <Box p={8}>
@@ -56,12 +66,27 @@ export default function PromotionsPage() {
           {promotions.map((promo) => (
             <Box key={promo._id} p={4} borderWidth={1} borderRadius="md">
               <Text fontWeight="bold">{promo.title}</Text>
-              <Image src={promo.image} alt={promo.title} mt={2} borderRadius="md" maxW="250px" />
+              <Image
+                src={promo.image}
+                alt={promo.title}
+                mt={2}
+                borderRadius="md"
+                maxW="250px"
+              />
               <Flex gap={4} mt={3}>
-                <Button as={Link} href={`/admin/promotions/${promo._id}/edit`} size="sm" colorScheme="blue">
+                <Button
+                  as={Link}
+                  href={`/admin/promotions/${promo._id}/edit`}
+                  size="sm"
+                  colorScheme="blue"
+                >
                   Editar
                 </Button>
-                <Button size="sm" colorScheme="red" onClick={() => handleDelete(promo._id)}>
+                <Button
+                  size="sm"
+                  colorScheme="red"
+                  onClick={() => handleDelete(promo._id)}
+                >
                   Eliminar
                 </Button>
               </Flex>

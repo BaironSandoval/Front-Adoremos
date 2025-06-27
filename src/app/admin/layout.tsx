@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
+import { IconType } from "react-icons";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { isAuthenticated, logout } = useAuth();
@@ -79,7 +80,7 @@ function NavItem({
   children,
 }: {
   href: string;
-  icon: any;
+  icon: IconType
   children: ReactNode;
 }) {
   return (
