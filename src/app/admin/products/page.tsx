@@ -85,6 +85,7 @@ export default function AdminProductsPage() {
             <Th>Nombre</Th>
             <Th>Precio</Th>
             <Th>Cantidad</Th>
+            <Th>Imagen</Th>
             <Th>Acciones</Th>
           </Tr>
         </Thead>
