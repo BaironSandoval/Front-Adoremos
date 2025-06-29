@@ -18,6 +18,7 @@ type Product = {
   price: number;
   quantity: number;
   description?: string;
+  category?: string;
   image?: string;
   images?: string[];
 };
@@ -81,6 +82,11 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         {product.description && (
           <Text fontSize="md" mt={4}>
             {product.description}
+          </Text>
+        )}
+        {product.category && (
+          <Text fontSize="sm" color="gray.500">
+            Categoría: {product.category}
           </Text>
         )}
 
