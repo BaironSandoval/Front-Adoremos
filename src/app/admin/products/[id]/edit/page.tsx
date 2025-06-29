@@ -19,6 +19,7 @@ export default function EditProductPage() {
     quantity: number;
     images: string[];
     description?: string;
+    category?: string; // Agregado para la categoría
   }>();
 
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function EditProductPage() {
     quantity: number;
     images: string[];
     description?: string;
+    category?: string; // Agregado para la categoría
   }) => {
     const token = localStorage.getItem("adminToken");
 

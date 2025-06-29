@@ -16,6 +16,7 @@ export default function NewProductPage() {
     quantity: number;
     images: string[];
     description?: string;
+    category?: string; // Agregado para la categoría
   }) => {
     const token = localStorage.getItem("adminToken");
 
