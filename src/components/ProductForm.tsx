@@ -23,6 +23,7 @@ type ProductFormProps = {
     name: string;
     price: number;
     quantity: number;
+    category?: string; // ← CAMBIADO
     images: string[]; // ← CAMBIADO
     description?: string;
   };
@@ -30,6 +31,7 @@ type ProductFormProps = {
     name: string;
     price: number;
     quantity: number;
+    category?: string; // ← CAMBIADO
     images: string[]; // ← CAMBIADO
     description?: string;
   }) => Promise<void>;
@@ -46,6 +48,7 @@ export default function ProductForm({
   const [quantity, setQuantity] = useState(initialData?.quantity || 1);
   const [images, setImages] = useState<string[]>(initialData?.images || []);
   const [description, setDescription] = useState(initialData?.description || "");
+  const [category, setCategory] = useState(initialData?.category || ""); // ← CAMBIADO
   const [uploading, setUploading] = useState(false);
   const toast = useToast();
 
@@ -72,7 +75,7 @@ export default function ProductForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ name, price, quantity, images, description });
+    await onSubmit({ name, price, quantity, images, description, category }); // ← CAMBIADO
   };
 
   return (
@@ -102,6 +105,15 @@ export default function ProductForm({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Describe el producto"
+        />
+      </FormControl>
+
+      <FormControl mb={4}>
+        <FormLabel>Categoría</FormLabel>
+        <Input
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="Categoría del producto"
         />
       </FormControl>
 
