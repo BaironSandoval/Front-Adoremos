@@ -100,20 +100,20 @@ export default function ProductForm({
       </FormControl>
 
       <FormControl mb={4}>
-        <FormLabel>Descripción</FormLabel>
-        <Textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe el producto"
-        />
-      </FormControl>
-
-      <FormControl mb={4}>
         <FormLabel>Categoría</FormLabel>
         <Input
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           placeholder="Categoría del producto"
+        />
+      </FormControl>
+
+      <FormControl mb={4}>
+        <FormLabel>Descripción</FormLabel>
+        <Textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Describe el producto"
         />
       </FormControl>
 
