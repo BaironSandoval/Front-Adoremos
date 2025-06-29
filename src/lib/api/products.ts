@@ -18,6 +18,7 @@ export const createProduct = async (product: {
   price: number;
   quantity: number;
   description?: string;
+  category?: string;
   images?: string[];
 }) => {
   const res = await fetch(`${BASE_URL}/products`, {
@@ -37,6 +38,7 @@ export const updateProduct = async (
     price: number;
     quantity: number;
     description?: string;
+    category?: string;
     images: string[];
   }
 ) => {
